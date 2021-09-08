@@ -12,34 +12,40 @@ blocks:
           commands:
             - checkout
             - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
-            - 'docker pull $SEMAPHORE_REGISTRY_URL/demo:latest || true'
-            - 'docker build --cache-from $ZIKOZEE_REGISTRY_URL/demo:latest -t $ZIKOZEE_REGISTRY_URL/demo:$ZIKOZEE_WORKFLOW_ID'
+            - 'docker pull $ZIKOZEE_REGISTRY_URL/demo:latest || true'
+            - 'docker build --cache-from $ZIKOZEE_REGISTRY_URL/demo:latest -t $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
             - 'docker push $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+      secrets:
+        - name: dockerhub-secret
   - name: Tests
     task:
       prologue:
         commands:
-          - docker login -u $SEMAPHORE_REGISTRY_USERNAME -p $SEMAPHORE_REGISTRY_PASSWORD $SEMAPHORE_REGISTRY_URL
-          - 'docker pull $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+          - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
+          - 'docker pull $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
       jobs:
         - name: Unit tests
           commands:
-            - 'docker run -it $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run lint'
+            - 'docker run -it $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run lint'
         - name: Functional tests
           commands:
             - sem-service start postgres
-            - 'docker run --net=host -it $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run ping'
-            - 'docker run --net=host -it $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run migrate'
+            - 'docker run --net=host -it $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run ping'
+            - 'docker run --net=host -it $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run migrate'
         - name: Integration tests
           commands:
             - sem-service start postgres
-            - 'docker run --net=host -it $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run test'
+            - 'docker run --net=host -it $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID npm run test'
+      secrets:
+        - name: dockerhub-secret
   - name: Push
     task:
       jobs:
         - name: Push
           commands:
-            - docker login -u $SEMAPHORE_REGISTRY_USERNAME -p $SEMAPHORE_REGISTRY_PASSWORD $SEMAPHORE_REGISTRY_URL
-            - 'docker pull $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $SEMAPHORE_REGISTRY_URL/demo:latest'
-            - 'docker push $SEMAPHORE_REGISTRY_URL/demo:latest'
+            - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
+            - 'docker pull $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker tag $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $ZIKOZEE_REGISTRY_URL/demo:latest'
+            - 'docker push $ZIKOZEE_REGISTRY_URL/demo:latest'
+      secrets:
+        - name: dockerhub-secret
