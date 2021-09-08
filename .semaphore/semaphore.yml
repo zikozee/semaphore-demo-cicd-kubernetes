@@ -14,7 +14,7 @@ blocks:
             - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
             - 'docker pull $ZIKOZEE_REGISTRY_URL/demo:latest || true'
             - 'docker build --cache-from $ZIKOZEE_REGISTRY_URL/demo:latest -t $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID .'
-            - 'docker push $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker push $ZIKOZEE_REGISTRY_URL/zikozee/demo:$SEMAPHORE_WORKFLOW_ID'
       secrets:
         - name: dockerhub-secret
   - name: Tests
