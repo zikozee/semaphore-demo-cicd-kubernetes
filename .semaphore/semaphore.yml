@@ -44,8 +44,8 @@ blocks:
         - name: Push
           commands:
             - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
-            - 'docker pull $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker tag $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID $ZIKOZEE_REGISTRY_URL/demo:latest'
-            - 'docker push $ZIKOZEE_REGISTRY_URL/demo:latest'
+            - 'docker pull $ZIKOZEE_REGISTRY_URL/zikozee/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker tag $ZIKOZEE_REGISTRY_URL/zikozee/demo:$SEMAPHORE_WORKFLOW_ID $ZIKOZEE_REGISTRY_URL/zikozee/demo:latest'
+            - 'docker push $ZIKOZEE_REGISTRY_URL/zikozee/demo:latest'
       secrets:
         - name: dockerhub-secret
