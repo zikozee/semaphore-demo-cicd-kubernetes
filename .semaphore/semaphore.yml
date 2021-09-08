@@ -11,10 +11,10 @@ blocks:
         - name: docker build
           commands:
             - checkout
-            - docker login -u $SEMAPHORE_REGISTRY_USERNAME -p $SEMAPHORE_REGISTRY_PASSWORD $SEMAPHORE_REGISTRY_URL
+            - docker login -u $ZIKOZEE_REGISTRY_USERNAME -p $ZIKOZEE_REGISTRY_PASSWORD $ZIKOZEE_REGISTRY_URL
             - 'docker pull $SEMAPHORE_REGISTRY_URL/demo:latest || true'
-            - 'docker build --cache-from $SEMAPHORE_REGISTRY_URL/demo:latest -t $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
-            - 'docker push $SEMAPHORE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker build --cache-from $ZIKOZEE_REGISTRY_URL/demo:latest -t $ZIKOZEE_REGISTRY_URL/demo:$ZIKOZEE_WORKFLOW_ID'
+            - 'docker push $ZIKOZEE_REGISTRY_URL/demo:$SEMAPHORE_WORKFLOW_ID'
   - name: Tests
     task:
       prologue:
